@@ -5,7 +5,7 @@ Authors: Brian W Bush <brian.bush@iohk.io> on behalf of Alexander Nemish
 Comments-Summary: No comments yet.
 Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-0003
 Status: Draft
-Type: Process
+Type: Standards
 Created: 2022-07-20
 License: CC-BY-4.0
 ---
