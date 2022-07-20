@@ -1,3 +1,7 @@
+
+*Note:* This document is an adaptation of the Cardano Improvement Proposals CIP) document that copies its organzation and most of its text from the CIP document: Cardano Foundation, *Cardano Improvement Proposals*, https://github.com/cardano-foundation/CIPs#readme, License CC-BY-4.0.
+
+
 # Marlowe Improvement Proposals (MIPs)
 
 Marlowe Improvement Proposals (MIPs) describe standards, processes; or provide general guidelines or information to the Marlowe Community. It is a formal, technical communication process that exists off-chain. MIPs do **not** represent a commitment of any form towards existing projects. Rather, they are a collection of sensible and sound solutions to common problems within the Marlowe ecosystem. MIPs evolves around different statuses, driven by one or more authors:
@@ -13,16 +17,14 @@ Marlowe Improvement Proposals (MIPs) describe standards, processes; or provide g
 
 It is therefore quite common for proposals and implementations to be worked on concomitantly. Even more so that a working implementation (when relevant) is a mandatory condition for reaching an `Active` status. 
 
-The entire process is described in greater detail in [MIP1 - "MIP Process"](./MIP-0001).
+The entire process is described in greater detail in [MIP-1 - "MIP Process"](./MIP-0001).
 
 ### Reviewed Proposals 
 
 | # | Title | Status | 
 | --- | --- | --- |
 
-<p align="right"><i>Last updated on 2022-06-14</i></p>
-
-> 💡 For more details about Statuses, refer to [MIP1](./MIP-0001).
+> 💡 For more details about Statuses, refer to [MIP-1](./MIP-0001).
 
 ### Proposals Under Review
 

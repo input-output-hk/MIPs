@@ -11,11 +11,7 @@ License: CC-BY-4.0
 ---
 
 
-This document is an adaptation of the Cardano Improvement Process (CIP) document that copies its organzation and most of its text from the CIP document:
-*   Title: CIP process
-*   Authors: Frederic Johnson <frederic.johnson@cardanofoundation.org>, Sebastien Guillemot <sebastien@emurgo.io>, Matthias Benkort <matthias.benkort@iohk.io>, Duncan Coutts <duncan.coutts@iohk.io>
-*   Source: https://github.com/cardano-foundation/CIPs/blob/master/CIP-0001/README.md
-*   License: CC-BY-4.0
+*Note:* This document is an adaptation of the Cardano Improvement Process (CIP) document that copies its organzation and most of its text from the CIP document: Frederic Johnson, Sebastien Guillemot, Matthias Benkort, Duncan Coutts, *CIP process*, https://github.com/cardano-foundation/CIPs/blob/master/CIP-0001/ReadMe.md, License CC-BY-4.0.
 
 
 ## Abstract
@@ -224,7 +220,7 @@ Draft proposals submitted to the [MIPs GitHub repository](https://github.com/inp
 - Assign a MIP number
 - Assign a type
 - Merge the pull request
-- List the MIP in the parent directory's [README.md](../README.md)
+- List the MIP in the parent directory's [ReadMe.md](../ReadMe.md)
 
 Proposals that get rejected by an editor will have the reason for the rejection in the comment section.
 
@@ -310,6 +306,6 @@ This MIP is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4
 
 ### See Also
 
-- [CIP Process](https://github.com/cardano-foundation/CIPs/blob/master/CIP-0001/README.md)
+- [CIP Process](https://github.com/cardano-foundation/CIPs/blob/master/CIP-0001/ReadMe.md)
 - [BIP 2: BIP process, revised](https://github.com/bitcoin/bips/blob/master/bip-0002.mediawiki)
 - [RFC 7282: On Consensus and Humming in the IETF](https://tools.ietf.org/html/rfc7282)
