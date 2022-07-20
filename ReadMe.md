@@ -34,6 +34,7 @@ Below are listed tentative MIPs still under discussion with the community. Discu
 | --- | --- |
 | 1 | [MIP Process](./MIP-0001/) | Draft |
 | 2 | [Versioning](./MIP-0002/) | (reserved) |
+| 3 | [Universal Validator](./MIP-0003/) | Draft |
 
 Extend or discuss ‘ideas’ in the [Carddano Developer Forums](https://forum.cardano.org/c/developers) or [Marlowe’s Discord Channel](https://discord.com/channels/826816523368005654/936295815926927390).
 
