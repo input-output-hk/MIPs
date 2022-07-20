@@ -1,6 +1,6 @@
 ---
 MIP: 1
-Title: MIP process
+Title: MIP Process
 Authors: Brian W Bush <brian.bush@iohk.io>, Tomasz Rybarczyk <tomasz.rybarczyk@iohk.io>
 Comments-Summary: No comments yet.
 Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-0001

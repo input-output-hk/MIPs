@@ -32,16 +32,17 @@ Below are listed tentative MIPs still under discussion with the community. Discu
 
 | **#** | **Title** | 
 | --- | --- |
-| 1 | [MIP process](./MIP-0001/) | Active |
+| 1 | [MIP Process](./MIP-0001/) | Draft |
+| 2 | [Versioning](./MIP-0002/) | (reserved) |
 
-Extend or discuss ‘ideas’ in the [Developer Forums](https://forum.cardano.org/c/developers), [Marlowe’s Discord Channel](https://discord.com/channels/826816523368005654/936295815926927390), or Marlowe's [Telegram Channel](https://t.me/IOHK_Marlowe).
+Extend or discuss ‘ideas’ in the [Carddano Developer Forums](https://forum.cardano.org/c/developers) or [Marlowe’s Discord Channel](https://discord.com/channels/826816523368005654/936295815926927390).
 
 ### Current Editors
 
--  Pablo Lamela - @palas
--  Jamie Bertram - @jhbertra
--  Brian W Bush - @bwbush
--  Yves Hauser - @yveshauser
--  Dino Morelli - @dino-iog
--  Hernan Rajchert - @hrajchert
--  Tomasz Rybarczyk - @paluh
+*   Pablo Lamela - @palas
+*   Jamie Bertram - @jhbertra
+*   Brian W Bush - @bwbush
+*   Yves Hauser - @yveshauser
+*   Dino Morelli - @dino-iog
+*   Hernan Rajchert - @hrajchert
+*   Tomasz Rybarczyk - @paluh
