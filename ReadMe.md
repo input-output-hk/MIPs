@@ -1,5 +1,4 @@
-
-*Note:* This document is an adaptation of the Cardano Improvement Proposals CIP) document that copies its organzation and most of its text from the CIP document: Cardano Foundation, *Cardano Improvement Proposals*, https://github.com/cardano-foundation/CIPs#readme, License CC-BY-4.0.
+*Note:* Visit this repository's [GitHub Discussions](https://github.com/input-output-hk/MIPs/discussions) to view, contribute to, or propose ideas for Marlowe improvements.
 
 
 # Marlowe Improvement Proposals (MIPs)
@@ -35,7 +34,7 @@ Below are listed tentative MIPs still under discussion with the community. Discu
 | 1 | [MIP Process](./MIP-0001/) | Draft |
 | 2 | [Versioning](./MIP-0002/) | (reserved) |
 
-Extend or discuss ‘ideas’ in the [Carddano Developer Forums](https://forum.cardano.org/c/developers) or [Marlowe’s Discord Channel](https://discord.com/channels/826816523368005654/936295815926927390).
+Extend or discuss ‘ideas’ in the [Cardano Developer Forums](https://forum.cardano.org/c/developers) or [Marlowe’s Discord Channel](https://discord.com/channels/826816523368005654/936295815926927390).
 
 ### Current Editors
 
@@ -46,3 +45,8 @@ Extend or discuss ‘ideas’ in the [Carddano Developer Forums](https://forum.c
 *   Dino Morelli - @dino-iog
 *   Hernan Rajchert - @hrajchert
 *   Tomasz Rybarczyk - @paluh
+
+
+## Note
+
+This document is an adaptation of the Cardano Improvement Proposals CIP) document that copies its organzation and most of its text from the CIP document: Cardano Foundation, *Cardano Improvement Proposals*, https://github.com/cardano-foundation/CIPs#readme, License CC-BY-4.0.
