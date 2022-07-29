@@ -46,7 +46,8 @@ The same Plutus script that validates Marlowe spending transactions must be also
 
 When used for minting role tokens, this "universal validator" must enforce the following constraints:
 1.  The validator is parameterized by a `TxOut` that it consumes when minting tokens.
-2. The `Redeemer` for the validator is the list of roles (i.e., token names) that will be minted, along with the number of tokens minted on a role-by-role basis.
+2.  The `Redeemer` for the validator is the list of roles (i.e., token names) that will be minted, along with the number of tokens minted on a role-by-role basis.
+3.  Minting can only occur if there is output to a the Marlowe script address: i.e., the minting transaction must also create a new Marlowe contract.
 
 
 ### Spending
@@ -62,10 +63,11 @@ Requiring the spending validator to compute the the `CurrencySymbol` for the rol
 
 Thus, having the `MarloweParams` parameterize the universal validator via that `TxOut` consumed in the minting process, rather than the `CurrencySymbol`, inexorably ties the minting validator to the spending validator. The present Marlowe validator's use of `CurrencySymbol` in its `MarloweParams` allows it to accept *any* currency symbol for role tokens, but this MIP's use of the `TxOut` in the `MarloweParams` for the *universal* validator ensures that the spending validator can only use tokens minted by minting validator because both these validators are *one and the same*.
 
-Note that the MIP forbids three potentiallly important and presently possible use cases:
+Note that the MIP forbids four potentiallly important and presently possible use cases:
 1.  Customized monetary policies. *Some Marlowe dApps (e.g., DAOs or centrally administered applications) would benefit from supervisory control via a sophisticated minting policy.*
 2.  Minting of additional role tokens after the original minting. *There may be certain crowd-oriented Marlowe dApps where this is desirable.*
 3.  Burning of role tokens after a contract completes. *This makes it impossible ever to recover the minimum Ada associated with a role token, thus effectively increasing the up-front cost of Marlowe contracts.*
+4.  Reuse of role tokens among multiple contracts.
 
 
 ## Backwards Compatibility
