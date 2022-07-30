@@ -29,8 +29,8 @@ The entire process is described in greater detail in [MIP-1 - "MIP Process"](./M
 
 Below are listed tentative MIPs still under discussion with the community. Discussions and progress will be reviewed by MIP editors. Note that they are listed below for easing navigation and also, tentatively allocating numbers to avoid clashes later on.
 
-| **#** | **Title** | 
-| --- | --- |
+| # | Title | Status |
+| --- | --- | --- |
 | 1 | [MIP Process](./MIP-0001/) | Proposed |
 | 2 | Versioning | (reserved) |
 | 3 | [Universal Validator](https://github.com/input-output-hk/MIPs/pull/1) | Draft |
