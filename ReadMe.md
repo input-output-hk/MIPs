@@ -31,8 +31,9 @@ Below are listed tentative MIPs still under discussion with the community. Discu
 
 | **#** | **Title** | 
 | --- | --- |
-| 1 | [MIP Process](./MIP-0001/) | Draft |
-| 2 | [Versioning](./MIP-0002/) | (reserved) |
+| 1 | [MIP Process](./MIP-0001/) | Proposed |
+| 2 | Versioning | (reserved) |
+| 3 | [Universal Validator](https://github.com/input-output-hk/MIPs/pull/1) | Draft |
 
 Extend or discuss ‘ideas’ in the [Cardano Developer Forums](https://forum.cardano.org/c/developers) or [Marlowe’s Discord Channel](https://discord.com/channels/826816523368005654/936295815926927390).
 
