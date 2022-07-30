@@ -1,4 +1,4 @@
-*Note:* Visit this repository's [GitHub Discussions](https://github.com/input-output-hk/MIPs/discussions) to view, contribute to, or propose ideas for Marlowe improvements.
+*Note:* Visit this repository's [GitHub Discussions](https://github.com/input-output-hk/MIPs/discussions) to view, contribute to, or propose ideas for Marlowe improvements; or visit the [Pull Requests](https://github.com/input-output-hk/MIPs/pulls) to comment on draft proposals.
 
 
 # Marlowe Improvement Proposals (MIPs)
