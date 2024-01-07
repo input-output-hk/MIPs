@@ -39,6 +39,8 @@ flowchart TD
     E --> |Notify|J
 ```
 
+In the contract above the `Cashier` action requires commitment from the `Sender` side. It can be represented as identical or different public key than Sender in the contract (if that party is represented by public key at all). The main point of this delegation is to give the `Recipient` ability to pick amount of the final cash out. Please note that we are not able to prevent old authorized cheque represented by choice commitment to be submitted so this basic payment channel works if we have only pay more and more money and rerepsent subsequent payments as a total sum of all the payments.
+
 ## Specification
 
 ### Version
