@@ -1,6 +1,6 @@
 ---
-MIP: ???
-Title: Input Commitment Protocol
+MIP: 0002
+Title: Inputs Commitment Protocol
 Authors: paluh <tomasz.rybarczyk@iohk.io>
 Comments-Summary: No comments yet.
 Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-???
@@ -17,7 +17,6 @@ This document describes a simple protocol which introduces a delegetion scheme o
 We don't limit the `Input` type to an `IChoice` because this scheme allows us to sign chain of `Input`s even though some of them could be performed by other party. In many cases the `IChoice` itself will be the commitment but it could come with a bundle of "conditions".
 
 The protocol does not provide execution guarantees on its own - those should be implemented using different Marlowe patterns on the contract level. I will provide an illustrative example.
-
 
 ## Motivation
 
@@ -71,7 +70,44 @@ We can even consider that separation of wallets from the payment channel App and
 
 ### Version
 
-This change comprises the Plutus validators which implements input commitment.
+This change comprises the Plutus validators which implements `Inputs Commitment` validator.
+
+### Validator inputs and state
+
+#### State
+
+Validator which will perform checks over commitment requires minimal state:
+
+```Haskell
+data Datum = (PubKey, (TokenName, CurrencySymbol))
+```
+
+* Datum should contain information about the `thread token` name and its currency which should uniquely identify Marlowe execution path. We don't want to tight currency symbol and thread token policy because of the future possible changes in the Marlowe Validator protocol.
+
+* Datum should also contain public key of the signatory who will sign the commitments.
+
+* On the UTxO value level we expect only role token and min ADA so we can extract the currency symbol and role name easily.
+
+#### Redeemer
+
+We have two types of redeemers to the script:
+
+```Haskell
+data Redeemer
+  = Commitment [Input] (Maybe TimeInterval) Signature
+  | Release
+```
+
+#### Verification
+
+* We should check if thread token is present. 
+
+* The `Signature` should be verified against `([Input], Maybe TimeInterval)` from the redeemer and `PubKey` from datum.
+
+
+that value. The list of `[Inputs]` should be sub sequence of the input sequence provided to Marlowe in the same transaction. We don't have to check 
+
+
 
 ## Rationale
 
