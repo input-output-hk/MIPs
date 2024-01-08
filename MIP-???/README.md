@@ -61,9 +61,11 @@ flowchart TD
 ```
 
 In the contract above the `Cashier` action requires commitment from the `Sender` side. So `IChoice "amount"` is the cheque which `Sender` and `Recipient` exchange off-chain and this signed `Input` is used at the end to cash out the money on the L1 layer.
-We can use two different keys for `Sender` wallet and `Sender` signature so the application which will issue the cheques doesn't even have to be the wallet itself.
+We can use two different keys for `Sender` wallet and `Sender` commitments so the application which will issue the cheques doesn't even have to be the wallet itself.
 
 The "cash out" branch is guarded by `Recipient` action so the cheques are safe and cannot be used by `Sender` to initiate the payout process with outdated cheque. The cheques themselves can be stored even publically or send to multiple storage backends for redundancy (email, IPFs etc.).
+
+We can even consider that separation of wallets from the payment channel App and use separate key for `Recipient` from the final destination wallet. This separation could allow us to minimize the risk but also to minimize the communication with the wallet from the application (possibly a mobile App).
 
 ## Specification
 
