@@ -13,8 +13,8 @@ License: CC-BY-4.0
 
 ## Abstract
 
-This document describes a simple protocol which introduces a delegetion scheme of the `Input` from a role to another independent party. The party gains a priviledge to perform a particular step or set of steps in the contract on behalf of the delegator. The scheme is minimal by design so the acompanying Plutus script is tiny and easy to audit.
-We don't limit the `Input` type to an `IChoice` but in seems to be rather natural step in a contract which  `Choice` limitation with unique `ChoiceId` would be rather desired.
+This document describes a simple protocol which introduces a delegetion scheme of the `Input`s from a role to another independent party. The party gains a priviledge to perform a particular step or set of steps in the contract on behalf of the delegator. The scheme is minimal by design so the acompanying Plutus script is tiny and easy to audit.
+We don't limit the `Input` type to an `IChoice` because this scheme allows us to sign chain of `Input`s even though some of them could be performed by other party. In many cases the `IChoice` itself will be the commitment but it could come with a bundle of "conditions".
 
 The protocol does not provide execution guarantees on its own - those should be implemented using different Marlowe patterns on the contract level. I will provide an illustrative example.
 
@@ -23,23 +23,47 @@ The protocol does not provide execution guarantees on its own - those should be 
 
 Delegating an execution of an action to another party may seem not particularly useful at a first glance. But if we look at it as an irreversible commitment from the delegator side and if we also add the transparent and deterministic nature of Marlowe to the picture we can start seeing a possibility for more powerful protocols which can be built on top of that.
 
-As a motivating example I would like to introduce a draft of unidirectional payment channel implementation with entirely offchain payment process till the final cash out. The channel will be fully secure and not bounded by the number of atomic transfers but by the limit of the funds locked in it. In other words we will be able to compress many subpayments into a single one.
+As a motivating example I would like to introduce a draft of unidirectional payment channel implementation with entirely offchain payment process till the final cash out. The channel will be fully secure and not bounded by the number of atomic transfers but by the limit of the funds locked in it. In other words we will be able to compress many off-chain subpayments into a single on-chain one.
+
+```mermaid
+sequenceDiagram
+    participant Sender
+    participant Cashier Plutus Script
+    participant Recipient
+    participant Marlowe Payment Channel
+    Recipient-->>Sender: 5 ADA bill
+    Sender-->>Recipient: 5 ADA cheque
+    Recipient-->>Sender: 7 ADA bill
+    Sender-->>Recipient: 12 ADA cheque
+    Recipient->>Marlowe Payment Channel: I want to cash out
+    Recipient->>Cashier Plutus Script:12 ADA cheque
+    Cashier Plutus Script->>Marlowe Payment Channel:12 ADA cheque is OK
+    Marlowe Payment Channel->>Recipient:12 ADA payout
+```
+
+So in the scheme above the dashed arrows (`-->`) represent off-chain communication. Please note that after the second bill `Sender` just issues a new cheque which covers both expenses. Because there will be only a single payout opportunity the highest one will be used and the smaller ones will be discarded.
+
+The solid arrows are parts of the final cash out transaction. They are rather conceptual and they don't directly represent element of the final contract which is sketched below:
+
 
 ```mermaid
 flowchart TD
     A(When) -->|Deposit by Sender| B{When}
-    B --> |Choice 'cash out' by Recipient|C(When)
-    B --> |Choice 'closing channel' by Sender| D(When)
-    B --> |Timeout far in the future|G(Close)
-    C --> |Choice 'amount' by Cashier| E(Pay 'amount' to Receipient)
-    D --> |Choice 'cash out' by Receipient|F(When)
+    B --> |IChoice 'cash out' by Recipient|C(When)
+    B --> |IChoice 'closing channel' by Sender| D(When)
+    B --> |Timeout far away in the future|G(Close)
+    C --> |IChoice 'amount' by Cashier| E(Pay 'amount' to Receipient)
+    D --> |IChoice 'cash out' by Receipient|F(When)
     D --> |Contestation timeout in the near future|H(Close)
-    F --> |Choice 'amount' by Cashier| I(Pay 'amount' to Receipient)
-    E --> |Recharge deposit by Sender| J{When...}
-    E --> |Notify|J
+    F --> |IChoice 'amount' by Cashier| I(Pay 'amount' to Receipient)
+    I --> K(Close)
+    E --> J(Close)
 ```
 
-In the contract above the `Cashier` action requires commitment from the `Sender` side. It can be represented as identical or different public key than Sender in the contract (if that party is represented by public key at all). The main point of this delegation is to give the `Recipient` ability to pick amount of the final cash out. Please note that we are not able to prevent old authorized cheque represented by choice commitment to be submitted so this basic payment channel works if we have only pay more and more money and rerepsent subsequent payments as a total sum of all the payments.
+In the contract above the `Cashier` action requires commitment from the `Sender` side. So `IChoice "amount"` is the cheque which `Sender` and `Recipient` exchange off-chain and this signed `Input` is used at the end to cash out the money on the L1 layer.
+We can use two different keys for `Sender` wallet and `Sender` signature so the application which will issue the cheques doesn't even have to be the wallet itself.
+
+The "cash out" branch is guarded by `Recipient` action so the cheques are safe and cannot be used by `Sender` to initiate the payout process with outdated cheque. The cheques themselves can be stored even publically or send to multiple storage backends for redundancy (email, IPFs etc.).
 
 ## Specification
 
