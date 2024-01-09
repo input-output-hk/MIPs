@@ -3,7 +3,7 @@ MIP: 0002
 Title: Inputs Commitment Protocol
 Authors: paluh <tomasz.rybarczyk@iohk.io>
 Comments-Summary: No comments yet.
-Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-0002
+Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-0003
 Status: Draft
 Type: Standards
 Created: 2024-01-07
@@ -90,7 +90,8 @@ This change comprises the Plutus validators which implements `Inputs Commitment`
 Validator which will perform checks over commitment requires a minimal state:
 
 ```Haskell
-newtype Datum = Datum ((TokenName, CurrencySymbol), PubKey)
+type ThreadToken = (TokenName, CurrencySymbol)
+newtype Datum = Datum (ThreadToken, PubKey)
 ```
 
 * The first element of the datum is information about the `thread token` in corresponding Marlowe contract. The name and the currency which should uniquely identify Marlowe execution path.
@@ -108,7 +109,7 @@ The redeemer to the script alows us to perform two actions - guard input applica
 ```Haskell
 type ShouldBurnToken = Bool
 data Redeemer
-    = Redeemer ([Input], Maybe TimeInterval) Signature ShouldBurnToken
+    = Redeemer ([Input], Maybe TimeInterval, ThreadToken) Signature ShouldBurnToken
     | DoBurnToken
 ```
 
@@ -118,7 +119,9 @@ data Redeemer
 
 * First check own redeemer.
 
-* If the redeemer contains commitment check the `Signature` value. It should be valid signature for the `PubKey` key and payload `([Input], Maybe TimeInterval)` (we can use `BuiltinData` of this `tuple` as baseline).
+* If the redeemer contains commitment check the `Signature` value. It should be valid signature for the `PubKey` key and payload `([Input], Maybe TimeInterval, ThreadToken)` (we can use `BuiltinData` of this `tuple` as baseline).
+
+* Check if the `ThreadToken` from the `Redeemer` matches the `ThreadToken` from the datum. The commitment should be dedicated to the particular Marlowe contract.
 
 * Find and pick the input with the thread token.
     
@@ -136,7 +139,7 @@ data Redeemer
 
 ##### Token Burning or Thread Preservation
 
-* If the action is `DoBurnToken` or `ShouldBurnToken` is `True` we expect role token to be burned (we can do this by checking the minting value in the `ScriptContext``).
+* If the action is `DoBurnToken` or `ShouldBurnToken` is `True` we expect role token to be burned (we can do this by checking the minting value in the `ScriptContext`).
 
 * If we don't burn the token we expect that the own input should be present in the output set with exactly the same value and the same datum.
 
