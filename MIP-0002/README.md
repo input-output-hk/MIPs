@@ -91,7 +91,7 @@ Validator which will perform checks over commitment requires a minimal state:
 
 ```Haskell
 type ThreadToken = (TokenName, CurrencySymbol)
-newtype Datum = Datum (ThreadToken, PubKey)
+newtype Datum = Datum ThreadToken PubKey
 ```
 
 * The first element of the datum is information about the `thread token` in corresponding Marlowe contract. The name and the currency which should uniquely identify Marlowe execution path.
