@@ -3,7 +3,7 @@ MIP: 0002
 Title: Inputs Commitment Protocol
 Authors: paluh <tomasz.rybarczyk@iohk.io>
 Comments-Summary: No comments yet.
-Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-???
+Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-0002
 Status: Draft
 Type: Standards
 Created: 2024-01-07
@@ -27,8 +27,8 @@ As a motivating example I would like to introduce a draft of unidirectional paym
 ```mermaid
 sequenceDiagram
     participant Sender
-    participant Cashier Plutus Script
     participant Recipient
+    participant Cashier Plutus Script
     participant Marlowe Payment Channel
     Recipient-->>Sender: 5 ADA bill
     Sender-->>Recipient: 5 ADA cheque
@@ -47,9 +47,27 @@ The solid arrows are parts of the final cash out transaction. They are rather co
 
 ```mermaid
 flowchart TD
-    A(When) -->|Deposit by Sender| B{When}
+    A(When) -->|Deposit by Sender| B(When)
     B --> |IChoice 'cash out' by Recipient|C(When)
+    B --> |Timeout far away in the future|G(Close)
+    C --> |IChoice 'amount' by Cashier| E(Pay 'amount' to Receipient)
+    E --> J(Close)
+```
+
+In the contract above the action performed by `Cashier` commitment from the `Sender` side. So `IChoice "amount"` is the cheque which `Sender` and `Recipient` exchange off-chain. This is a signed `Input` which is used at the end to cash out the money on the L1 layer.
+
+We can use two different keys for `Sender` wallet and `Sender` commitments so the application which will issue the cheques doesn't even have to be the wallet itself.
+The same separation strategy could be used for the `Recipient` payout initiation and the wallet if we cover the tx fees from the channel itself.
+
+The "cash out" branch is guarded by `Recipient` action so the cheques are safe and cannot be used by `Sender` to initiate the payout process with outdated cheque. The cheques themselves can be stored even publically or send to multiple storage backends for redundancy (email, IPFs etc.).
+
+We can also imagine a simple modification which introduces channel closure - we add a "closing channel" branch which allows the `Sender` to initiate the closing procedure which contains a shorter contestation period during which `Recipient` still have a chance to withdraw
+
+```mermaid
+flowchart TD
+    A(When) -->|Deposit by Sender| B(When)
     B --> |IChoice 'closing channel' by Sender| D(When)
+    B --> |IChoice 'cash out' by Recipient|C(When)
     B --> |Timeout far away in the future|G(Close)
     C --> |IChoice 'amount' by Cashier| E(Pay 'amount' to Receipient)
     D --> |IChoice 'cash out' by Receipient|F(When)
@@ -58,13 +76,6 @@ flowchart TD
     I --> K(Close)
     E --> J(Close)
 ```
-
-In the contract above the `Cashier` action requires commitment from the `Sender` side. So `IChoice "amount"` is the cheque which `Sender` and `Recipient` exchange off-chain and this signed `Input` is used at the end to cash out the money on the L1 layer.
-We can use two different keys for `Sender` wallet and `Sender` commitments so the application which will issue the cheques doesn't even have to be the wallet itself.
-
-The "cash out" branch is guarded by `Recipient` action so the cheques are safe and cannot be used by `Sender` to initiate the payout process with outdated cheque. The cheques themselves can be stored even publically or send to multiple storage backends for redundancy (email, IPFs etc.).
-
-We can even consider that separation of wallets from the payment channel App and use separate key for `Recipient` from the final destination wallet. This separation could allow us to minimize the risk but also to minimize the communication with the wallet from the application (possibly a mobile App).
 
 ## Specification
 
@@ -76,13 +87,15 @@ This change comprises the Plutus validators which implements `Inputs Commitment`
 
 #### State
 
-Validator which will perform checks over commitment requires minimal state:
+Validator which will perform checks over commitment requires a minimal state:
 
 ```Haskell
-data Datum = (PubKey, (TokenName, CurrencySymbol))
+newtype Datum = Datum ((TokenName, CurrencySymbol), PubKey)
 ```
 
-* Datum should contain information about the `thread token` name and its currency which should uniquely identify Marlowe execution path. We don't want to tight currency symbol and thread token policy because of the future possible changes in the Marlowe Validator protocol.
+* The first element of the datum is information about the `thread token` in corresponding Marlowe contract. The name and the currency which should uniquely identify Marlowe execution path.
+
+    We don't want to assume equality between currency symbol and thread token policy because this assumption can be broken by possible future changes in the Marlowe Validator protocol.
 
 * Datum should also contain public key of the signatory who will sign the commitments.
 
@@ -90,23 +103,42 @@ data Datum = (PubKey, (TokenName, CurrencySymbol))
 
 #### Redeemer
 
-We have two types of redeemers to the script:
+The redeemer to the script alows us to perform two actions - guard input applications with commitments and release of the token.
 
 ```Haskell
+type ShouldBurnToken = Bool
 data Redeemer
-  = Commitment [Input] (Maybe TimeInterval) Signature
-  | Release
+    = Redeemer ([Input], Maybe TimeInterval) Signature ShouldBurnToken
+    | DoBurnToken
 ```
 
 #### Verification
 
-* We should check if thread token is present. 
+##### Commitment Checking
 
-* The `Signature` should be verified against `([Input], Maybe TimeInterval)` from the redeemer and `PubKey` from datum.
+* First check own redeemer.
 
+* If the redeemer contains commitment check the `Signature` value. It should be valid signature for the `PubKey` key and payload `([Input], Maybe TimeInterval)` (we can use `BuiltinData` of this `tuple` as baseline).
 
-that value. The list of `[Inputs]` should be sub sequence of the input sequence provided to Marlowe in the same transaction. We don't have to check 
+* Find and pick the input with the thread token.
+    
+    > This check can be costly so we can consider optimization which introduces `TxIn` index to the redeemer to speed up search and avoid `Value`` decoding.
 
+* For the above input decode the `Redeemer` which should be a Marlowe `TransactionInput`.
+
+* Verify that the list of `[Inputs]` from the `TransactionInput` contains subsequence of `Input`s from own redeemer. In other words we want to check if the commited input series is actually executed in the transaction.
+
+    > This check could be optimize by a hint provided in the `Redeemer` which could indicate the initial position of the subsequence.
+
+* Verify that a `Party` in all the other inputs from the `TransactionInput` is different than the role which is locked in the own UTxO.
+
+* Validate equality of the time interval from own datum if present against the time interval from the Marlowe `Redeemer`.
+
+##### Token Burning or Thread Preservation
+
+* If the action is `DoBurnToken` or `ShouldBurnToken` is `True` we expect role token to be burned (we can do this by checking the minting value in the `ScriptContext``).
+
+* If we don't burn the token we expect that the own input should be present in the output set with exactly the same value and the same datum.
 
 
 ## Rationale
