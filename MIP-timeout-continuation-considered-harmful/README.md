@@ -82,7 +82,7 @@ This is more anectodal observation but probably still worth mentioning. A common
 
 ## Specification
 
-The only change proposed by this proposal is removal of the `timeout_continuation` from the `When` construct and usage of `Close` semantics as a default action after the timeout.
+The only change implied by this proposal is the removal of the `timeout_continuation` from the `When` the construct and usage of `Close` semantics upon the timeout.
 
 ## Backwards compatibility
 
