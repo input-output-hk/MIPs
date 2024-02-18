@@ -4,7 +4,7 @@ Title: Timeout Continuation Considered Harmful
 Authors: paluh (aka Tomasz Rybarczyk) <t.rybarczyk@lambdaterms.com>
 Comments-Summary: No comments yet.
 Comments-URI: https://github.com/input-output-hk/MIPs/wiki/Comments:MIP-0003
-Status:Draft
+Status: Draft
 Type: Standards
 Created: 2024-01-07
 License: CC-BY-4.0
