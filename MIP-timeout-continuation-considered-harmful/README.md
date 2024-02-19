@@ -23,7 +23,9 @@ The proposal outlines several advantages of this approach, including a cleaner s
 ### Accidental Complexity Imposed by `timeout_continuation`
 
 In the current framework of the Marlowe protocol, `When` clauses serve as essential mechanisms for orchestrating user interactions or managing timeouts. However, this design is significantly encumbered by the `timeout_continuation` mechanism in non obvious way. 
-Intended to safeguard against the locking of funds by ensuring contract progression, it introduces a significant layer of complexity and some unintended consequence - the requirement that the contract can always progress to its conclusion, even in the face of erroneous situations. This necessity manifests in several critical ways:
+Intended to safeguard against the locking of funds by ensuring contract progression, it introduces an unintended consequence - the requirement that the contract can always progress to its conclusion, even in the face of erroneous situations.
+
+I think that the most important language properties which `timeout_continuation` enforces on us are: 
 
 * **Forced Continuity Through Defaulting Logic**: The protocol's requirement for uninterrupted progression to a `Close` operation—essential for the release of funds without risking their indefinite lock-up—mandates the implementation of defaulting logic for situations like division by zero, undefined variables or negative money transfers. This necessity introduces a vector for not obvious outcomes, undermining the protocol's reliability.
 
