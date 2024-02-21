@@ -45,8 +45,9 @@ The current use of `timeout_continuation` is also identified as largely redundan
 
 ### Semantic Difference Between `timeout_continuation` and `Notify`
 
-
 As state above the `timeout_continuation` construct can be effectively replaced with `Notify (TimeIntervalStart > timeout)` condition followed by the desired continuation. The diffence in semantics is that `Notify` based `timeout` should be "triggered" by interested user before the actual `timeout` of the enclosing `When` is reached. Current `timeout_continuation` when reached is not capped by any other timeout condition.
+
+Additional difference is that we can not prevent application of the other inputs after the timeout in the current Marlowe easily. The interested party which wants to pick a desired `timeout_continuation` path modeled using `Notify` has to act and pick that one because reaching the timeout itself does not excludes other input paths (please note that having another branch with `Notify (TimeIntervalEnd < timeout)` won't work at it can be just picked "up front"). The story would be different if we introduce `Assert` (which is shortly discussed below) as a part of the language. We could the actually rise an exception in every alternative branch by putting `Assert (TimeIntervalEnd < timeout)` on the beginning of the particular continuation.
 
 I would argue that this trigger based approach is pretty natural and consistent with the of the language - all inputs continuations are picked if an interested party provides triggers it on time and in other cases we naturally expect the contract to close. By embracing a `Notify`-based approach to timeouts, we foster an interaction model which we already have in place.
 
